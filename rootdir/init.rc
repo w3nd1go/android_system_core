@@ -9,6 +9,9 @@ import /init.usb.rc
 import /init.${ro.hardware}.rc
 import /init.${ro.zygote}.rc
 import /init.trace.rc
+# Include CM's extra init file
+import /init.cm.rc
+
 
 on early-init
     # Set init and its forked children's oom_adj.
@@ -656,6 +659,11 @@ service installd /system/bin/installd
 service flash_recovery /system/bin/install-recovery.sh
     class main
     oneshot
+    disabled
+
+# update recovery if enabled
+on property:persist.sys.recovery_update=true
+    start flash_recovery
 
 service racoon /system/bin/racoon
     class main
